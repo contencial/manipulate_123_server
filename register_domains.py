@@ -119,7 +119,7 @@ def register_domain_info(domain_info):
         exit(1)
 
 def get_domain_info():
-    SPREADSHEET_ID = os.environ['PAD_PARAMETER_SSID']
+    SPREADSHEET_ID = os.environ['MANIPULATION_PARAM_SSID']
     scope = ['https://spreadsheets.google.com/feeds','https://www.googleapis.com/auth/drive']
     credentials = ServiceAccountCredentials.from_json_keyfile_name('spreadsheet.json', scope)
     gc = gspread.authorize(credentials)
