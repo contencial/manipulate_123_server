@@ -135,7 +135,7 @@ if __name__ == '__main__':
     try:
         logger.debug("register_domain: start get_domain_info")
         domain_info = get_domain_info()
-        logger.debug("register_domain: start remove_domain_info")
+        logger.debug("register_domain: start register_domain_info")
         register_domain_info(domain_info)
         exit(0)
     except Exception as err:
