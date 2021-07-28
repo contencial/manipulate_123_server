@@ -63,12 +63,13 @@ def register_domain_info(domain_info):
     logger.debug(f'register_domain_info: UserAgent: {ua.chrome}')
 
     options = Options()
-    options.add_argument(ua.chrome)
+    options.add_argument(f'user-agent={ua.chrome}')
     
     try:
         driver = webdriver.Chrome(executable_path=webdriverPath, options=options)
         
         driver.get(url)
+        driver.maximize_window()
 
         driver.find_element_by_id("MemberContractId").send_keys(login)
         driver.find_element_by_id("MemberPassword").send_keys(password)
