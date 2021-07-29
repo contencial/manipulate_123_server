@@ -99,6 +99,7 @@ def register_domain_info(domain_info):
             sleep(4)
             
             driver.switch_to.window(driver.window_handles[1])
+            driver.implicitly_wait(200)
             driver.find_element_by_id("username").send_keys(cwp_login)
             driver.find_element_by_id("password").send_keys(password)
             driver.find_element_by_id("btnsubmit").click()
