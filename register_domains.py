@@ -36,6 +36,7 @@ def register_domain_to_server(driver, index, domain_info, server_no):
         driver.find_element_by_id('pathdomain').send_keys(Keys.BACKSPACE * len(domain_name))
         driver.find_element_by_id('pathdomain').send_keys(f'public_html/{domain_name}')
         driver.find_element_by_xpath('//button[@onclick="saveNewDomain()"]').click()
+        sleep(2)
         driver.implicitly_wait(200)
         driver.find_element_by_id("table_domains_wrapper")
 

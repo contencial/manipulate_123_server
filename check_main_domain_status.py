@@ -37,16 +37,16 @@ def get_domain_info():
 
 def http_request(domain_info):
     for element in domain_info:
-        logger.debug(f'check_main_domain_status: http://{element[1]}/')
+        logger.debug(f'check_main_domain_status: {element[0]}: http://{element[1]}/')
         try:
             req = requests.get(f'http://{element[1]}/')
             html = BeautifulSoup(req.text, 'html.parser')
             title = html.find('title').get_text()
             logger.debug(f'check_main_domain_status: status: {req.status_code}: title: {title}/')
-            yield [req.status_code, title]
+            yield [element[0], element[1], req.status_code, title]
         except Exception as err:
             logger.error(f'Error: check_main_domain_status: http_request: {err}')
-            yield ["Timeout", "-"]
+            yield [element[0], element[1], "Timeout", "-"]
 
 def write_response(response):
     SPREADSHEET_ID = os.environ['SERVER123_SSID']
@@ -57,13 +57,17 @@ def write_response(response):
 
     now = datetime.datetime.now()
     sheet.update_acell('E1', now.strftime('%Y-%m-%d %H:%M'))
-    cell_list = sheet.range('C2:D301')
+    cell_list = sheet.range('A2:D301')
     i = 0
     for cell in cell_list:
-        if i % 2 == 0:
-            cell.value = response[int(i / 2)][int(i % 2)]
+        if i % 4 == 0:
+            cell.value = response[int(i / 4)][int(i % 4)]
+        if i % 4 == 1:
+            cell.value = response[int(i / 4)][int(i % 4)]
+        if i % 4 == 2:
+            cell.value = response[int(i / 4)][int(i % 4)]
         else:
-            cell.value = response[int(i / 2)][int(i % 2)]
+            cell.value = response[int(i / 4)][int(i % 4)]
         i += 1
     sheet.update_cells(cell_list, value_input_option='USER_ENTERED')
 
