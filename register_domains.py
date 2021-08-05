@@ -27,7 +27,7 @@ def register_domain_to_server(driver, index, domain_info, server_no):
     while int(domain_info[index][0]) == server_no:
         domain_name = domain_info[index][1]
 
-        driver.implicitly_wait(10)
+        driver.implicitly_wait(300)
         driver.find_element_by_id("btn_add_domain").click()
 
         sleep(3)
