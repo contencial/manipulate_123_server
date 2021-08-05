@@ -159,6 +159,9 @@ if __name__ == '__main__':
     try:
         logger.debug("remove_domain: start get_domain_info")
         domain_info = get_domain_info()
+        if len(domain_info) == 0:
+            logger.debug("remove_domain: no remove target")
+            exit(0)
         logger.debug("remove_domain: start remove_domain_info")
         remove_domain_info(domain_info)
         exit(0)
