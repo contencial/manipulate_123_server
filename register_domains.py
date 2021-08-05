@@ -27,33 +27,17 @@ def register_domain_to_server(driver, index, domain_info, server_no):
     while int(domain_info[index][0]) == server_no:
         domain_name = domain_info[index][1]
 
-        driver.find_element_by_xpath('//li[@class="searchmenu"][3]').click()
-        sleep(2)
-        driver.find_element_by_xpath('//a[@href="?module=domains"]').click()
-        sleep(7)
-
+        driver.implicitly_wait(10)
         driver.find_element_by_id("btn_add_domain").click()
+
         sleep(3)
-        
+
         driver.find_element_by_id('newdomain').send_keys(domain_name)
         driver.find_element_by_id('pathdomain').send_keys(Keys.BACKSPACE * len(domain_name))
         driver.find_element_by_id('pathdomain').send_keys(f'public_html/{domain_name}')
         driver.find_element_by_xpath('//button[@onclick="saveNewDomain()"]').click()
         driver.implicitly_wait(200)
         driver.find_element_by_id("table_domains_wrapper")
-
-        driver.find_element_by_xpath('//li[@class="searchmenu"][3]').click()
-        sleep(2)
-        driver.find_element_by_xpath('//a[@href="?module=letsencrypt"]').click()
-        sleep(7)
-
-        dropdown = driver.find_element_by_id('domain_lets')
-        select = Select(dropdown)
-        select.select_by_value(domain_name)
-        sleep(20)
-
-        driver.find_element_by_id('btn-lets-add').click()
-        sleep(60)
 
         logger.debug(f'register_domain_to_server: No.{server_no}: {domain_name}')
         index += 1
@@ -119,12 +103,11 @@ def register_domain_info(domain_info):
             driver.find_element_by_id("username").send_keys(cwp_login)
             driver.find_element_by_id("password").send_keys(password)
             driver.find_element_by_id("btnsubmit").click()
-            driver.implicitly_wait(60)
 
+            driver.implicitly_wait(60)
             driver.find_element_by_xpath('//li[@class="searchmenu"][3]').click()
             sleep(2)
             driver.find_element_by_xpath('//a[@href="?module=domains"]').click()
-            sleep(7)
 
             index = register_domain_to_server(driver, index, domain_info, server_no)
             driver.close()
