@@ -33,12 +33,12 @@ def register_domain_to_server(driver, index, domain_info, server_no):
         select.select_by_value(domain_name)
         sleep(2)
         driver.implicitly_wait(600)
-        driver.find_element_by_xpath('//span[contains(text(), "Install")]')
+        driver.find_element_by_class_name('fa-lock')
 
         driver.find_element_by_id('btn-lets-add').click()
         sleep(2)
         driver.implicitly_wait(600)
-        driver.find_element_by_xpath('//span[contains(text(), "Install")]')
+        driver.find_element_by_class_name('toast-title')
         sleep(1)
 
         logger.debug(f'register_domain_to_server: No.{server_no}: {domain_name}')
