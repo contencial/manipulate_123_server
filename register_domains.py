@@ -23,26 +23,47 @@ logger.addHandler(handler)
 logger.propagate = False
 
 ### functions ###
+def install_autossl(driver, index, domain_info, server_no):
+    while int(domain_info[index][0]) == server_no:
+        domain_name = domain_info[index][1]
+
+        driver.implicitly_wait(10)
+        dropdown = driver.find_element_by_id('domain_lets')
+        select = Select(dropdown)
+        select.select_by_value(domain_name)
+        sleep(2)
+        driver.implicitly_wait(600)
+        driver.find_element_by_class_name('fa-lock')
+
+        driver.find_element_by_id('btn-lets-add').click()
+        sleep(2)
+        driver.implicitly_wait(600)
+        driver.find_element_by_class_name('toast-title')
+        sleep(1)
+
+        logger.debug(f'register_domain_to_server: No.{server_no}: {domain_name}: autossl installed')
+        index += 1
+
+    return index
+
 def register_domain_to_server(driver, index, domain_info, server_no):
     while int(domain_info[index][0]) == server_no:
         domain_name = domain_info[index][1]
 
         driver.implicitly_wait(300)
         driver.find_element_by_id("btn_add_domain").click()
-
         sleep(3)
 
         driver.find_element_by_id('newdomain').send_keys(domain_name)
         driver.find_element_by_id('pathdomain').send_keys(Keys.BACKSPACE * len(domain_name))
         driver.find_element_by_id('pathdomain').send_keys(f'public_html/{domain_name}')
         driver.find_element_by_xpath('//button[@onclick="saveNewDomain()"]').click()
+        sleep(2)
+        driver.implicitly_wait(600)
+        driver.find_element_by_class_name('toast-title')
+        sleep(1)
 
-        sleep(3)
-
-        logger.debug(f'register_domain_to_server: No.{server_no}: {domain_name}')
-        index += 1
-
-    return index
+        logger.debug(f'register_domain_to_server: No.{server_no}: {domain_name}: registered')
 
 def button_click(driver, button_text):
     buttons = driver.find_elements_by_tag_name("button")
@@ -108,8 +129,14 @@ def register_domain_info(domain_info):
             driver.find_element_by_xpath('//li[@class="searchmenu"][3]').click()
             sleep(2)
             driver.find_element_by_xpath('//a[@href="?module=domains"]').click()
+            register_domain_to_server(driver, index, domain_info, server_no)
 
-            index = register_domain_to_server(driver, index, domain_info, server_no)
+            driver.implicitly_wait(60)
+            driver.find_element_by_xpath('//li[@class="searchmenu"][3]').click()
+            sleep(2)
+            driver.find_element_by_xpath('//a[@href="?module=letsencrypt"]').click()
+            index = install_autossl(driver, index, domain_info, server_no)
+
             driver.close()
             driver.switch_to.window(driver.window_handles[0])
             
