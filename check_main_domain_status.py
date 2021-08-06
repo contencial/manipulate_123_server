@@ -72,7 +72,7 @@ def write_response(response):
     sheet.update_cells(cell_list, value_input_option='USER_ENTERED')
 
 def create_message(response):
-    flag = True
+    flag = False
     message = 'ご担当者さま\n\n'
     message += '本日ダウンしているドメインです。\n\n'
     message += 'サーバー番号 メインドメイン HTTPステータスコード 内容\n'
