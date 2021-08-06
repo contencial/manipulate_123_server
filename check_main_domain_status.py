@@ -148,7 +148,7 @@ if __name__ == '__main__':
         response = list(http_request(domain_info))
         write_response(response)
         message = create_message(response)
-        print(message)
+        logger.debug(message)
         if not message == None:
             create_issue(message)
         exit(0)
