@@ -129,7 +129,7 @@ def create_issue(message):
         driver.find_element_by_id("TicketTicketTitle").send_keys(f'現時点でのメインドメインのダウン {now}')
         driver.find_element_by_id("TicketBody").send_keys(message)
         sleep(10)
-        driver.find_element_by_xpath('//input[@value="送信する"]').click()
+        driver.find_element_by_xpath('//input[@type="submit"]').click()
         sleep(10)
 
         driver.close()
