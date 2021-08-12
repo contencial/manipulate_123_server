@@ -74,7 +74,8 @@ def write_response(response):
 def create_message(response):
     flag = False
     message = 'ご担当者さま\n\n'
-    message += '本日ダウンしているドメインです。\n\n'
+    message += '現時点でダウンしているドメイン一覧です。\n\n'
+    message += 'ご確認お願い致します。\n\n'
     message += 'サーバー番号 メインドメイン HTTPステータスコード 内容\n'
     for element in response:
         if element[2] == 200 and element[3] == 'ERROR':
