@@ -42,7 +42,7 @@ def http_request(domain_info):
             req = requests.get(f'http://{element[1]}/')
             html = BeautifulSoup(req.text, 'html.parser')
             title = html.find('title').get_text()
-            logger.debug(f'check_main_domain_status: status: {req.status_code}: title: {title}/')
+            logger.debug(f'check_main_domain_status: status: {req.status_code}: title: {title}')
             yield [element[0], element[1], req.status_code, title]
         except Exception as err:
             logger.error(f'Error: check_main_domain_status: http_request: {err}')
@@ -57,17 +57,13 @@ def write_response(response):
 
     now = datetime.datetime.now()
     sheet.update_acell('E1', now.strftime('%Y-%m-%d %H:%M'))
-    cell_list = sheet.range('A2:D301')
+    cell_list = sheet.range('C2:D301')
     i = 0
     for cell in cell_list:
-        if i % 4 == 0:
-            cell.value = response[int(i / 4)][0]
-        if i % 4 == 1:
-            cell.value = response[int(i / 4)][1]
-        if i % 4 == 2:
-            cell.value = response[int(i / 4)][2]
+        if i % 2 == 0:
+            cell.value = response[int(i / 2)][2]
         else:
-            cell.value = response[int(i / 4)][3]
+            cell.value = response[int(i / 2)][3]
         i += 1
     sheet.update_cells(cell_list, value_input_option='USER_ENTERED')
 
