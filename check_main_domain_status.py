@@ -61,13 +61,13 @@ def write_response(response):
     i = 0
     for cell in cell_list:
         if i % 4 == 0:
-            cell.value = response[int(i / 4)][int(i % 4)]
+            cell.value = response[int(i / 4)][0]
         if i % 4 == 1:
-            cell.value = response[int(i / 4)][int(i % 4)]
+            cell.value = response[int(i / 4)][1]
         if i % 4 == 2:
-            cell.value = response[int(i / 4)][int(i % 4)]
+            cell.value = response[int(i / 4)][2]
         else:
-            cell.value = response[int(i / 4)][int(i % 4)]
+            cell.value = response[int(i / 4)][3]
         i += 1
     sheet.update_cells(cell_list, value_input_option='USER_ENTERED')
 
