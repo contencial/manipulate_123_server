@@ -32,8 +32,8 @@ def get_domain_info():
     sheet = gc.open_by_key(SPREADSHEET_ID).worksheet('Main')
 
     domain_info = sheet.get_all_values()
-    print(domain_info.pop(0))
-    print(domain_info.pop(0))
+    domain_info.pop(0)
+    domain_info.pop(0)
     return domain_info
 
 def http_request(domain_info):
