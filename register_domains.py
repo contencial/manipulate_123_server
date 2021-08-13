@@ -43,6 +43,8 @@ def install_autossl(driver, index, domain_info, server_no):
 
         logger.debug(f'register_domain_to_server: No.{server_no}: {domain_name}: autossl installed')
         index += 1
+        if index >= len(domain_info):
+            break
 
     return index
 
@@ -65,6 +67,8 @@ def register_domain_to_server(driver, index, domain_info, server_no):
 
         logger.debug(f'register_domain_to_server: No.{server_no}: {domain_name}: registered')
         index += 1
+        if index >= len(domain_info):
+            break
 
 def button_click(driver, button_text):
     buttons = driver.find_elements_by_tag_name("button")
