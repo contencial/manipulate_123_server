@@ -57,6 +57,8 @@ def remove_domain_from_server(driver, index, domain_info, server_no, title):
 
         logger.debug(f'remove_domain_to_server: No.{server_no}: {domain_name}')
         index += 1
+        if index >= len(domain_info):
+            break
 
     return index
 
