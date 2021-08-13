@@ -64,6 +64,7 @@ def register_domain_to_server(driver, index, domain_info, server_no):
         sleep(1)
 
         logger.debug(f'register_domain_to_server: No.{server_no}: {domain_name}: registered')
+        index += 1
 
 def button_click(driver, button_text):
     buttons = driver.find_elements_by_tag_name("button")
