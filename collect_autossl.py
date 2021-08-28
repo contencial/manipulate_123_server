@@ -14,9 +14,8 @@ from oauth2client.service_account import ServiceAccountCredentials
 # Logger setting
 from logging import getLogger, FileHandler, DEBUG
 logger = getLogger(__name__)
-today = datetime.datetime.now()
 os.makedirs('./log', exist_ok=True)
-handler = FileHandler(f'log/{today.strftime("%Y-%m-%d")}_result.log', mode='a')
+handler = FileHandler(f'log/autossl.log', mode='a')
 handler.setLevel(DEBUG)
 logger.setLevel(DEBUG)
 logger.addHandler(handler)
@@ -32,7 +31,7 @@ def write_autossl(driver, server_no):
     ssl_list = driver.find_elements_by_class_name('sorting_1')
     for element in ssl_list:
         match = re.search(r'^[\w\-\.]+', element.text)
-        logger.debug(f'{server_no} {match}')
+        logger.debug(f'{server_no} {match.group()}')
     
 def button_click(driver, button_text):
     buttons = driver.find_elements_by_tag_name("button")
@@ -50,7 +49,7 @@ def collect_autossl():
     webdriverPath = os.environ['WEBDRIVER_PATH']
     
     ua = UserAgent()
-    logger.debug(f'register_domain_info: UserAgent: {ua.chrome}')
+    logger.debug(f'collect_autossl: UserAgent: {ua.chrome}')
 
     options = Options()
     options.add_argument(f'user-agent={ua.chrome}')
@@ -65,12 +64,12 @@ def collect_autossl():
         driver.find_element_by_id("MemberPassword").send_keys(password)
         button_click(driver, "ログイン")
         
-        logger.debug('register_domain_info: login')
+        logger.debug('collect_autossl: login')
         sleep(3)
         
         driver.find_element_by_xpath('//a[@href="/servers/"]').click()
         
-        logger.debug('register_domain_info: go to server_list')
+        logger.debug('collect_autossl: go to server_list')
         sleep(3)
 
         server_no = 1
@@ -97,23 +96,26 @@ def collect_autossl():
             sleep(2)
             driver.find_element_by_xpath('//a[@href="?module=letsencrypt"]').click()
             write_autossl(driver, server_no)
+            sleep(2)
 
             driver.close()
             driver.switch_to.window(driver.window_handles[0])
+
+            server_no += 1
             
         driver.close()
         driver.quit()
     except Exception as err:
-        logger.debug(f'Error: register_domain_info: {err}')
+        logger.debug(f'Error: collect_autossl: {err}')
         exit(1)
 
 ### main_script ###
 if __name__ == '__main__':
 
     try:
-        logger.debug("register_domain: start register_domain_info")
+        logger.debug("collect_autossl: start collect_autossl")
         collect_autossl()
         exit(0)
     except Exception as err:
-        logger.debug(f'register_domain: {err}')
+        logger.debug(f'collect_autossl: {err}')
         exit(1)
