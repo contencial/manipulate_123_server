@@ -36,6 +36,9 @@ def remove_domain_from_server(driver, index, domain_info, server_no, title):
     while int(domain_info[index][0]) == server_no:
         domain_name = domain_info[index][1]
 
+        driver.find_element_by_class_name("navbar-minimalize").click()
+        sleep(1)
+
         dropdown = driver.find_element_by_name("DataTables_Table_0_length")
         select = Select(dropdown)
         select.select_by_value('100')
