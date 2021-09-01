@@ -10,6 +10,7 @@ from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.support.select import Select
 from fake_useragent import UserAgent
 from oauth2client.service_account import ServiceAccountCredentials
+from webdriver_manager.chrome import ChromeDriverManager
 
 # Logger setting
 from logging import getLogger, FileHandler, DEBUG
@@ -46,7 +47,6 @@ def collect_autossl():
     login = os.environ['SERVER123_USER']
     password = os.environ['SERVER123_PASS']
     cwp_login = os.environ['CWP_USER']
-    webdriverPath = os.environ['WEBDRIVER_PATH']
     
     ua = UserAgent()
     logger.debug(f'collect_autossl: UserAgent: {ua.chrome}')
@@ -55,7 +55,7 @@ def collect_autossl():
     options.add_argument(f'user-agent={ua.chrome}')
     
     try:
-        driver = webdriver.Chrome(executable_path=webdriverPath, options=options)
+        driver = webdriver.Chrome(ChromeDriverManager().install(), options=options)
         
         driver.get(url)
         driver.maximize_window()
