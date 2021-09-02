@@ -12,6 +12,7 @@ from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.support.select import Select
 from fake_useragent import UserAgent
 from oauth2client.service_account import ServiceAccountCredentials
+from webdriver_manager.chrome import ChromeDriverManager
 
 # Logger setting
 from logging import getLogger, FileHandler, DEBUG
@@ -96,7 +97,6 @@ def create_issue(message):
     url = "https://member.123server.jp/members/login/"
     login = os.environ['SERVER123_USER']
     password = os.environ['SERVER123_PASS']
-    webdriverPath = os.environ['WEBDRIVER_PATH']
 
     ua = UserAgent()
     logger.debug(f'create_issue: UserAgent: {ua.chrome}')
@@ -105,7 +105,7 @@ def create_issue(message):
     options.add_argument(f'user-agent={ua.chrome}')
 
     try:
-        driver = webdriver.Chrome(executable_path=webdriverPath, options=options)
+        driver = webdriver.Chrome(ChromeDriverManager().install(), options=options)
 
         driver.get(url)
         driver.maximize_window()
