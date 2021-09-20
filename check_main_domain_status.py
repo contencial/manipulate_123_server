@@ -117,7 +117,7 @@ def create_issue(message):
         logger.debug('create_issue: login')
         sleep(3)
 
-        driver.find_element_by_xpath('//li[@class="accordion"][2]').click()
+        driver.find_element_by_class_name('main-menu').find_elements_by_tag_name('li')[6].click()
         sleep(2)
         driver.find_element_by_xpath('//a[@href="/tickets/open"]').click()
 
