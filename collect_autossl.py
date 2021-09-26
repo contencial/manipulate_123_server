@@ -53,6 +53,8 @@ def collect_autossl():
 
     options = Options()
     options.add_argument(f'user-agent={ua.chrome}')
+    options.add_argument('--ignore-ssl-errors=yes')
+    options.add_argument('--ignore-certificate-errors')
     
     try:
         driver = webdriver.Chrome(ChromeDriverManager().install(), options=options)
