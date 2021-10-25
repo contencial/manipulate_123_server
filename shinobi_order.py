@@ -99,16 +99,17 @@ def create_shinobi_order(fileName):
         if element[1] == '0':
             continue
         genre = element[3]
-        kw1 = check_keyword(element[5])
-        kw2 = check_keyword(element[6])
-        kw3 = check_keyword(element[7])
-        kw4 = check_keyword(element[8])
-        kw5 = check_keyword(element[9])
-        kw6 = check_keyword(element[10])
-        kw7 = check_keyword(element[11])
-        kw8 = check_keyword(element[12])
-        kw9 = check_keyword(element[13])
-        kw10 = check_keyword(element[14])
+        text_type = element[4]
+        kw1 = check_keyword(element[6])
+        kw2 = check_keyword(element[7])
+        kw3 = check_keyword(element[8])
+        kw4 = check_keyword(element[9])
+        kw5 = check_keyword(element[10])
+        kw6 = check_keyword(element[11])
+        kw7 = check_keyword(element[12])
+        kw8 = check_keyword(element[13])
+        kw9 = check_keyword(element[14])
+        kw10 = check_keyword(element[15])
         volume = element[1]
 
         sheet[f'B{index}'] = genre
@@ -124,7 +125,7 @@ def create_shinobi_order(fileName):
         sheet[f'L{index}'] = kw10
         sheet[f'S{index}'] = int(volume)
         sheet[f'T{index}'] = 1500
-        sheet[f'U{index}'] = '体験談'
+        sheet[f'U{index}'] = text_type
         sheet[f'V{index}'] = '指定なし'
 
         total += int(volume)
