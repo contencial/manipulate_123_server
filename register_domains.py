@@ -79,6 +79,19 @@ def button_click(driver, button_text):
             button.click()
             break
 
+def login_to_serverlist(driver, login, password):
+    driver.find_element_by_id("MemberContractId").send_keys(login)
+    driver.find_element_by_id("MemberPassword").send_keys(password)
+    button_click(driver, "ログイン")
+
+    logger.debug('register_domain_info: login')
+    sleep(3)
+
+    driver.find_element_by_xpath('//a[@href="/servers/"]').click()
+
+    logger.debug('register_domain_info: go to server_list')
+    sleep(3)
+
 def register_domain_info(domain_info):
     url = "https://member.123server.jp/members/login/"
     login = os.environ['SERVER123_USER']
@@ -99,17 +112,7 @@ def register_domain_info(domain_info):
         driver.get(url)
         driver.maximize_window()
 
-        driver.find_element_by_id("MemberContractId").send_keys(login)
-        driver.find_element_by_id("MemberPassword").send_keys(password)
-        button_click(driver, "ログイン")
-        
-        logger.debug('register_domain_info: login')
-        sleep(3)
-        
-        driver.find_element_by_xpath('//a[@href="/servers/"]').click()
-        
-        logger.debug('register_domain_info: go to server_list')
-        sleep(3)
+        login_to_serverlist(driver, login, password)
 
         info_size = len(domain_info)
         index = 0
@@ -120,6 +123,13 @@ def register_domain_info(domain_info):
             elif server_no > 200:
                 driver.find_element_by_link_text(str(3)).click()
             sleep(3)
+
+            if re.search(r"login", driver.current_url) != None:
+                login_to_serverlist(driver, login, pasword)
+                if server_no > 100 and server_no <= 200:
+                    driver.find_element_by_link_text(str(2)).click()
+                elif server_no > 200:
+                    driver.find_element_by_link_text(str(3)).click()
 
             login_button = driver.find_elements_by_xpath('//button[@type="submit"]')
             list_no = server_no % 100 - 1
