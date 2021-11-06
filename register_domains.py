@@ -118,7 +118,9 @@ def register_domain_info(domain_info):
         index = 0
         while index < info_size:
             server_no = int(domain_info[index][0])
-            if server_no > 100 and server_no <= 200:
+            if server_no <= 100:
+                driver.find_element_by_link_text(str(1)).click()
+            elif server_no > 100 and server_no <= 200:
                 driver.find_element_by_link_text(str(2)).click()
             elif server_no > 200:
                 driver.find_element_by_link_text(str(3)).click()
@@ -126,7 +128,9 @@ def register_domain_info(domain_info):
 
             if re.search(r"login", driver.current_url) != None:
                 login_to_serverlist(driver, login, pasword)
-                if server_no > 100 and server_no <= 200:
+                if server_no <= 100:
+                    driver.find_element_by_link_text(str(1)).click()
+                elif server_no > 100 and server_no <= 200:
                     driver.find_element_by_link_text(str(2)).click()
                 elif server_no > 200:
                     driver.find_element_by_link_text(str(3)).click()
