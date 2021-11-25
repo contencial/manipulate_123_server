@@ -8,8 +8,6 @@ from time import sleep
 from bs4 import BeautifulSoup
 from selenium import webdriver
 from selenium.webdriver.chrome.options import Options
-from selenium.webdriver.common.keys import Keys
-from selenium.webdriver.support.select import Select
 from fake_useragent import UserAgent
 from oauth2client.service_account import ServiceAccountCredentials
 from webdriver_manager.chrome import ChromeDriverManager
