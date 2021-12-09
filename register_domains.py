@@ -127,7 +127,7 @@ def register_domain_info(domain_info):
             sleep(3)
 
             if re.search(r"login", driver.current_url) != None:
-                login_to_serverlist(driver, login, pasword)
+                login_to_serverlist(driver, login, password)
                 if server_no <= 100:
                     driver.find_element_by_link_text(str(1)).click()
                 elif server_no > 100 and server_no <= 200:
