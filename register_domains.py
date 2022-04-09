@@ -8,6 +8,7 @@ from selenium import webdriver
 from selenium.webdriver.chrome.options import Options
 from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.support.select import Select
+from selenium.webdriver.common.desired_capabilities import DesiredCapabilities
 from fake_useragent import UserAgent
 from oauth2client.service_account import ServiceAccountCredentials
 from webdriver_manager.chrome import ChromeDriverManager
@@ -104,10 +105,12 @@ def register_domain_info(domain_info):
     options = Options()
     options.add_argument(f'user-agent={ua.chrome}')
     options.add_argument('--ignore-ssl-errors=yes')
-    options.add_argument('--ignore-certificate-errors')
+
+    capabilities = DesiredCapabilities.CHROME.copy()
+    capabilities['acceptInsecureCerts'] = True
     
     try:
-        driver = webdriver.Chrome(ChromeDriverManager().install(), options=options)
+        driver = webdriver.Chrome(ChromeDriverManager().install(), options=options, desired_capabilities=capabilities)
         
         driver.get(url)
         driver.maximize_window()
