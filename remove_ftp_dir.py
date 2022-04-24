@@ -45,7 +45,11 @@ def remove_ftp_dir(domain, host, user, passwd):
             user=user,
             passwd=passwd
         )
-    ftp.rename(f'/public_html/{domain}', f'/_old/{domain}')
+    try:
+        ftp.rename(f'/public_html/{domain}', f'/_old/{domain}')
+    except Exception as err:
+        ftp.rename(f'/_old/{domain}', f'/_old/{domain}_2')
+        ftp.rename(f'/public_html/{domain}', f'/_old/{domain}')
     
 ### main_script ###
 if __name__ == '__main__':
