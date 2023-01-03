@@ -8,6 +8,8 @@ from selenium import webdriver
 from selenium.webdriver.chrome.options import Options
 from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.support.select import Select
+from selenium.webdriver.common.by import By
+from selenium.webdriver.chrome import service as fs
 from selenium.webdriver.common.desired_capabilities import DesiredCapabilities
 from fake_useragent import UserAgent
 from oauth2client.service_account import ServiceAccountCredentials
@@ -30,17 +32,17 @@ def install_autossl(driver, index, domain_info, server_no):
         domain_name = domain_info[index][1]
 
         driver.implicitly_wait(10)
-        dropdown = driver.find_element_by_id('domain_lets')
+        dropdown = driver.find_element(By.ID, 'domain_lets')
         select = Select(dropdown)
         select.select_by_value(domain_name)
         sleep(2)
         driver.implicitly_wait(600)
-        driver.find_element_by_class_name('fa-lock')
+        driver.find_element(By.CLASS_NAME, 'fa-lock')
 
-        driver.find_element_by_id('btn-lets-add').click()
+        driver.find_element(By.ID, 'btn-lets-add').click()
         sleep(2)
         driver.implicitly_wait(600)
-        driver.find_element_by_class_name('toast-title')
+        driver.find_element(By.CLASS_NAME, 'toast-title')
         sleep(1)
 
         logger.debug(f'register_domain_to_server: No.{server_no}: {domain_name}: autossl installed')
@@ -55,16 +57,16 @@ def register_domain_to_server(driver, index, domain_info, server_no):
         domain_name = domain_info[index][1]
 
         driver.implicitly_wait(300)
-        driver.find_element_by_id("btn_add_domain").click()
+        driver.find_element(By.ID, "btn_add_domain").click()
         sleep(3)
 
-        driver.find_element_by_id('newdomain').send_keys(domain_name)
-        driver.find_element_by_id('pathdomain').send_keys(Keys.BACKSPACE * len(domain_name))
-        driver.find_element_by_id('pathdomain').send_keys(f'public_html/{domain_name}')
-        driver.find_element_by_xpath('//button[@onclick="saveNewDomain()"]').click()
+        driver.find_element(By.ID, 'newdomain').send_keys(domain_name)
+        driver.find_element(By.ID, 'pathdomain').send_keys(Keys.BACKSPACE * len(domain_name))
+        driver.find_element(By.ID, 'pathdomain').send_keys(f'public_html/{domain_name}')
+        driver.find_element(By.XPATH, '//button[@onclick="saveNewDomain()"]').click()
         sleep(2)
         driver.implicitly_wait(600)
-        driver.find_element_by_class_name('toast-title')
+        driver.find_element(By.CLASS_NAME, 'toast-title')
         sleep(1)
 
         logger.debug(f'register_domain_to_server: No.{server_no}: {domain_name}: registered')
@@ -73,7 +75,7 @@ def register_domain_to_server(driver, index, domain_info, server_no):
             break
 
 def button_click(driver, button_text):
-    buttons = driver.find_elements_by_tag_name("button")
+    buttons = driver.find_elements(By.TAG_NAME, "button")
 
     for button in buttons:
         if button.text == button_text:
@@ -81,14 +83,14 @@ def button_click(driver, button_text):
             break
 
 def login_to_serverlist(driver, login, password):
-    driver.find_element_by_id("MemberContractId").send_keys(login)
-    driver.find_element_by_id("MemberPassword").send_keys(password)
+    driver.find_element(By.ID, "MemberContractId").send_keys(login)
+    driver.find_element(By.ID, "MemberPassword").send_keys(password)
     button_click(driver, "ログイン")
 
     logger.debug('register_domain_info: login')
     sleep(3)
 
-    driver.find_element_by_xpath('//a[@href="/servers/"]').click()
+    driver.find_element(By.XPATH, '//a[@href="/servers/"]').click()
 
     logger.debug('register_domain_info: go to server_list')
     sleep(3)
@@ -110,7 +112,8 @@ def register_domain_info(domain_info):
     capabilities['acceptInsecureCerts'] = True
     
     try:
-        driver = webdriver.Chrome(ChromeDriverManager().install(), options=options, desired_capabilities=capabilities)
+        chrome_service = fs.Service(executable_path=ChromeDriverManager().install())
+        driver = webdriver.Chrome(service=chrome_service, options=options, desired_capabilities=capabilities)
         
         driver.get(url)
         driver.maximize_window()
@@ -122,43 +125,43 @@ def register_domain_info(domain_info):
         while index < info_size:
             server_no = int(domain_info[index][0])
             if server_no <= 100:
-                driver.find_element_by_link_text(str(1)).click()
+                driver.find_element(By.LINK_TEXT, str(1)).click()
             elif server_no > 100 and server_no <= 200:
-                driver.find_element_by_link_text(str(2)).click()
+                driver.find_element(By.LINK_TEXT, str(2)).click()
             elif server_no > 200:
-                driver.find_element_by_link_text(str(3)).click()
+                driver.find_element(By.LINK_TEXT, str(3)).click()
             sleep(3)
 
             if re.search(r"login", driver.current_url) != None:
                 login_to_serverlist(driver, login, password)
                 if server_no <= 100:
-                    driver.find_element_by_link_text(str(1)).click()
+                    driver.find_element(By.LINK_TEXT, str(1)).click()
                 elif server_no > 100 and server_no <= 200:
-                    driver.find_element_by_link_text(str(2)).click()
+                    driver.find_element(By.LINK_TEXT, str(2)).click()
                 elif server_no > 200:
-                    driver.find_element_by_link_text(str(3)).click()
+                    driver.find_element(By.LINK_TEXT, str(3)).click()
 
-            login_button = driver.find_elements_by_xpath('//button[@type="submit"]')
+            login_button = driver.find_elements(By.XPATH, '//button[@type="submit"]')
             list_no = server_no % 100 - 1
             login_button[list_no].click()
             sleep(4)
             
             driver.switch_to.window(driver.window_handles[1])
             driver.implicitly_wait(200)
-            driver.find_element_by_id("username").send_keys(cwp_login)
-            driver.find_element_by_id("password").send_keys(password)
-            driver.find_element_by_id("btnsubmit").click()
+            driver.find_element(By.ID, "username").send_keys(cwp_login)
+            driver.find_element(By.ID, "password").send_keys(password)
+            driver.find_element(By.ID, "btnsubmit").click()
 
             driver.implicitly_wait(60)
-            driver.find_element_by_xpath('//li[@class="searchmenu"][3]').click()
+            driver.find_element(By.XPATH, '//li[@class="searchmenu"][3]').click()
             sleep(2)
-            driver.find_element_by_xpath('//a[@href="?module=domains"]').click()
+            driver.find_element(By.XPATH, '//a[@href="?module=domains"]').click()
             register_domain_to_server(driver, index, domain_info, server_no)
 
             driver.implicitly_wait(60)
-            driver.find_element_by_xpath('//li[@class="searchmenu"][3]').click()
+            driver.find_element(By.XPATH, '//li[@class="searchmenu"][3]').click()
             sleep(2)
-            driver.find_element_by_xpath('//a[@href="?module=letsencrypt"]').click()
+            driver.find_element(By.XPATH, '//a[@href="?module=letsencrypt"]').click()
             index = install_autossl(driver, index, domain_info, server_no)
 
             driver.close()

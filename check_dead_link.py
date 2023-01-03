@@ -45,7 +45,8 @@ def check_dead_link(domain_info):
     options = Options()
     options.add_argument(f'user-agent={ua.chrome}')
 
-    driver = webdriver.Chrome(ChromeDriverManager().install(), options=options)
+    chrome_service = fs.Service(executable_path=ChromeDriverManager().install())
+    driver = webdriver.Chrome(service=chrome_service, options=options)
 
     driver.get(url)
     driver.maximize_window()
@@ -59,15 +60,15 @@ def check_dead_link(domain_info):
         try:
             target = f"https://www.{element[5]}"
             driver.get(url)
-            driver.find_element_by_id("starturl").send_keys(Keys.BACKSPACE * len("http://"))
-            driver.find_element_by_id("starturl").send_keys(target)
-            driver.find_element_by_id("btn_submit").click()
+            driver.find_element(By.ID, "starturl").send_keys(Keys.BACKSPACE * len("http://"))
+            driver.find_element(By.ID, "starturl").send_keys(target)
+            driver.find_element(By.ID, "btn_submit").click()
 
             wait = WebDriverWait(driver, 60)
             text = "終了しました"
             wait.until(expected_conditions.text_to_be_present_in_element((By.ID, "short_msg"), text))
 
-            cnt_err = driver.find_element_by_id("ct_err").text
+            cnt_err = driver.find_element(By.ID, "ct_err").text
             logger.debug(f'check_dead_link: err: {cnt_err}')
             yield [element[0], element[5], cnt_err]
         except Exception as err:

@@ -9,6 +9,8 @@ from selenium import webdriver
 from selenium.webdriver.chrome.options import Options
 from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.support.select import Select
+from selenium.webdriver.common.by import By
+from selenium.webdriver.chrome import service as fs
 from fake_useragent import UserAgent
 from oauth2client.service_account import ServiceAccountCredentials
 from webdriver_manager.chrome import ChromeDriverManager
@@ -45,24 +47,25 @@ def download_template(downloadsDirPath):
     options.add_experimental_option("prefs", prefs)
     
     try:
-        driver = webdriver.Chrome(ChromeDriverManager().install(), options=options)
+        chrome_service = fs.Service(executable_path=ChromeDriverManager().install())
+        driver = webdriver.Chrome(service=chrome_service, options=options)
         
         driver.get(url)
         driver.maximize_window()
 
-        driver.find_element_by_xpath('//a[@href="https://kiji-daiko.biz-samurai.com/order/123server/transport"]').click()
+        driver.find_element(By.XPATH, '//a[@href="https://kiji-daiko.biz-samurai.com/order/123server/transport"]').click()
         driver.implicitly_wait(10)
-        driver.find_element_by_id('login').click()
+        driver.find_element(By.ID, 'login').click()
         driver.implicitly_wait(10)
-        driver.find_element_by_id('login_id').send_keys(login)
-        driver.find_element_by_id('login_pass').send_keys(password)
-        driver.find_element_by_id('registrationForm').submit()
+        driver.find_element(By.ID, 'login_id').send_keys(login)
+        driver.find_element(By.ID, 'login_pass').send_keys(password)
+        driver.find_element(By.ID, 'registrationForm').submit()
         logger.debug('download_template: login')
         driver.implicitly_wait(10)
         
-        driver.find_element_by_xpath('//a[@href="/order/upload-order"]').click()
+        driver.find_element(By.XPATH, '//a[@href="/order/upload-order"]').click()
         driver.implicitly_wait(10)
-        driver.find_elements_by_class_name('col-xs-6')[1].find_element_by_xpath('//a[@href="/img/keyword_template.xlsx"]').click()
+        driver.find_elements(By.CLASS_NAME , 'col-xs-6')[1].find_element(By.XPATH, '//a[@href="/img/keyword_template.xlsx"]').click()
 
         return driver
     except Exception as err:
@@ -149,6 +152,7 @@ if __name__ == '__main__':
 
         logger.debug("shinobi_order: create shinobi order")
         create_shinobi_order(fileName)
+        sleep(6000)
         exit(0)
     except Exception as err:
         logger.debug(f'shinobi_order: {err}')

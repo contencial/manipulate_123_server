@@ -8,6 +8,8 @@ from time import sleep
 from bs4 import BeautifulSoup
 from selenium import webdriver
 from selenium.webdriver.chrome.options import Options
+from selenium.webdriver.common.by import By
+from selenium.webdriver.chrome import service as fs
 from fake_useragent import UserAgent
 from oauth2client.service_account import ServiceAccountCredentials
 from webdriver_manager.chrome import ChromeDriverManager
@@ -84,7 +86,7 @@ def create_message(response):
         return None
 
 def button_click(driver, button_text):
-    buttons = driver.find_elements_by_tag_name("button")
+    buttons = driver.find_elements(By.TAG_NAME, "button")
 
     for button in buttons:
         if button.text == button_text:
@@ -103,28 +105,29 @@ def create_issue(message):
     options.add_argument(f'user-agent={ua.chrome}')
 
     try:
-        driver = webdriver.Chrome(ChromeDriverManager().install(), options=options)
+        chrome_service = fs.Service(executable_path=ChromeDriverManager().install())
+        driver = webdriver.Chrome(service=chrome_service, options=options)
 
         driver.get(url)
         driver.maximize_window()
 
-        driver.find_element_by_id("MemberContractId").send_keys(login)
-        driver.find_element_by_id("MemberPassword").send_keys(password)
+        driver.find_element(By.ID, "MemberContractId").send_keys(login)
+        driver.find_element(By.ID, "MemberPassword").send_keys(password)
         button_click(driver, "ログイン")
 
         logger.debug('create_issue: login')
         sleep(3)
 
-        driver.find_element_by_class_name('main-menu').find_elements_by_tag_name('li')[6].click()
+        driver.find_element(By.CLASS_NAME, 'main-menu').find_elements(By.TAG_NAME, 'li')[6].click()
         sleep(2)
-        driver.find_element_by_xpath('//a[@href="/tickets/open"]').click()
+        driver.find_element(By.XPATH, '//a[@href="/tickets/open"]').click()
 
         now = datetime.datetime.now().strftime('%Y-%m-%d %H:%M')
         driver.implicitly_wait(60)
-        driver.find_element_by_id("TicketTicketTitle").send_keys(f'現時点でのメインドメインのダウン {now}')
-        driver.find_element_by_id("TicketBody").send_keys(message)
+        driver.find_element(By.ID, "TicketTicketTitle").send_keys(f'現時点でのメインドメインのダウン {now}')
+        driver.find_element(By.ID, "TicketBody").send_keys(message)
         sleep(10)
-        driver.find_element_by_xpath('//input[@type="submit"]').click()
+        driver.find_element(By.XPATH, '//input[@type="submit"]').click()
         sleep(10)
 
         driver.close()

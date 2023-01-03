@@ -43,7 +43,8 @@ def translate_data(ja_data):
     options = Options()
     options.add_argument(f'user-agent={ua.chrome}')
 
-    driver = webdriver.Chrome(ChromeDriverManager().install(), options=options)
+    chrome_service = fs.Service(executable_path=ChromeDriverManager().install())
+    driver = webdriver.Chrome(service=chrome_service, options=options)
 
     driver.get(url)
     driver.maximize_window()
