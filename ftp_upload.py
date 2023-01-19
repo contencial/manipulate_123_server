@@ -186,6 +186,10 @@ class Data():
             for f in files:
                 with open(os.path.join(root, f), 'rb') as fp:
                     self.ftp.storbinary(f"STOR {f}", fp)
+                if f == 'index.tpl':
+                    with open('./tmp/index.cgi', 'rb') as fp:
+                        self.ftp.storbinary('STOR index.cgi', fp)
+                        self.ftp.sendcmd('SITE CHMOD 755 index.cgi')
         shutil.rmtree('./tmp/vgseo/')
 
 
